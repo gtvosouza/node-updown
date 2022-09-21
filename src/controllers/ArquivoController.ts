@@ -45,7 +45,7 @@ export class ArquivoController {
 
     private _inicializarBucket(collection: String): GridFSBucket {
         return new GridFSBucket(this._bd, {
-            bucketName: 'arquivos' + collection
+            bucketName: 'arquivos_' + collection
         })
     }
 

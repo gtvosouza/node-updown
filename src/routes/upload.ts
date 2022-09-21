@@ -18,19 +18,22 @@ uploadRouter.post('/', async (req, res) => {
 
     const bd = req.app.locals.bd
     const arquivoCtrl = new ArquivoController(bd)
-    const idsArquivosSalvos = []
+    const idsArquivosSalvos : String[] = []
     let quantidadeErroGravacao = 0
     let quantidadeErroObjArquivoInvalido = 0
     let quantidadeErroInesperado = 0
     
 
     const promises = nomesArquivos.map(async (arquivo) => {
-        const objArquivo = req.files[arquivo]
+        
+        
+        const objArquivo = req.files ? req.files[arquivo] : null;
+
         const {nomeEmpresa} = req.query;
 
         try {
             const idArquivo = await arquivoCtrl.realizarUpload(objArquivo, String(nomeEmpresa))
-            idsArquivosSalvos.push(idArquivo)
+            idsArquivosSalvos.push(String(idArquivo))
         } catch (erro) {
             switch (erro) {
                 case ErroUpload.NAO_FOI_POSSIVEL_GRAVAR:

@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.app = void 0;
+var express = require("express");
+var fileUpload = require("express-fileupload");
+var cors = require("cors");
+var logger = require("morgan");
+var upload_1 = require("./routes/upload");
+var download_1 = require("./routes/download");
+exports.app = express();
+exports.app.use(cors());
+exports.app.use(logger('dev'));
+exports.app.use(fileUpload());
+exports.app.use('/upload', upload_1.uploadRouter);
+exports.app.use('/download', download_1.downloadRouter);

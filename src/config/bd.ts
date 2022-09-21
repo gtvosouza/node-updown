@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb'
 
 import { app } from '../app'
 
-const URI_BD = `mongodb://localhost/db_teste`; 
+const URI_BD = `mongodb://localhost/arquivos`; 
 
 export const conectarNoBD = async () => {
 
