@@ -1,7 +1,7 @@
 import { app } from './app'
 import { conectarNoBD } from './config/bd'
 
-const porta = process.env.PORT || 3000
+const porta = process.env.PORT || 3335
 
 const server = app.listen(
     porta,
