@@ -11,7 +11,9 @@ import {
 
 export enum ErroUpload {
     OBJETO_ARQUIVO_INVALIDO = 'Objeto de arquivo inválido',
-    NAO_FOI_POSSIVEL_GRAVAR = 'Não foi possível gravar o arquivo no banco de dados'
+    NAO_FOI_POSSIVEL_GRAVAR = 'Não foi possível gravar o arquivo no banco de dados',
+    SEM_EMPRESA = 'Não existe Empresa'
+
 }
 
 export enum ErroDownload {
@@ -41,52 +43,57 @@ export class ArquivoController {
             && objArquivo['data']
     }
 
-    private _inicializarBucket(): GridFSBucket {
+    private _inicializarBucket(collection: String): GridFSBucket {
         return new GridFSBucket(this._bd, {
-            bucketName: 'arquivos'
+            bucketName: 'arquivos' + collection
         })
     }
 
-    realizarUpload(objArquivo: any): Promise<ObjectId> {
+    realizarUpload(objArquivo: any, collection: String): Promise<ObjectId> {
         return new Promise((resolve, reject) => {
-            if (this._ehUmObjetoDeArquivoValido(objArquivo)) {
-                const bucket = this._inicializarBucket()
-
-                const nomeArquivo = objArquivo['name']
-                const conteudoArquivo = objArquivo['data']
-                const nomeArquivoTemp = `${nomeArquivo}_${(new Date().getTime())}`
-
-                const caminhoArquivoTemp = join(this._caminhoDiretorioArquivos, nomeArquivoTemp)
-                writeFileSync(caminhoArquivoTemp, conteudoArquivo)
-
-                const streamGridFS = bucket.openUploadStream(nomeArquivo, {
-                    metadata: {
-                        mimetype: objArquivo['mimetype']
-                    }
-                })
-
-                const streamLeitura = createReadStream(caminhoArquivoTemp)
-                streamLeitura
-                    .pipe(streamGridFS)
-                    .on('finish', () => {
-                        unlinkSync(caminhoArquivoTemp)
-                        resolve(new ObjectId(`${streamGridFS.id}`))
-                    })
-                    .on('error', erro => {
-                        console.log(erro)
-                        reject(ErroUpload.NAO_FOI_POSSIVEL_GRAVAR)
-                    })
+            console.log(collection)
+            if(collection === "undefined") {
+                reject(ErroUpload.SEM_EMPRESA)
             } else {
-                reject(ErroUpload.OBJETO_ARQUIVO_INVALIDO)
+                if (this._ehUmObjetoDeArquivoValido(objArquivo)) {
+                    const bucket = this._inicializarBucket(collection)
+
+                    const nomeArquivo = objArquivo['name']
+                    const conteudoArquivo = objArquivo['data']
+                    const nomeArquivoTemp = `${nomeArquivo}_${(new Date().getTime())}`
+
+                    const caminhoArquivoTemp = join(this._caminhoDiretorioArquivos, nomeArquivoTemp)
+                    writeFileSync(caminhoArquivoTemp, conteudoArquivo)
+
+                    const streamGridFS = bucket.openUploadStream(nomeArquivo, {
+                        metadata: {
+                            mimetype: objArquivo['mimetype']
+                        }
+                    })
+
+                    const streamLeitura = createReadStream(caminhoArquivoTemp)
+                    streamLeitura
+                        .pipe(streamGridFS)
+                        .on('finish', () => {
+                            unlinkSync(caminhoArquivoTemp)
+                            resolve(new ObjectId(`${streamGridFS.id}`))
+                        })
+                        .on('error', erro => {
+                            console.log(erro)
+                            reject(ErroUpload.NAO_FOI_POSSIVEL_GRAVAR)
+                        })
+                } else {
+                    reject(ErroUpload.OBJETO_ARQUIVO_INVALIDO)
+                }
             }
         })
     }
 
-    realizarDownload(id: string): Promise<string> {
+    realizarDownload(id: string, collection: string): Promise<string> {
         return new Promise(async (resolve, reject) => {
             if (id && id.length == 24) {
                 const _id = new ObjectId(id)
-                const bucket = this._inicializarBucket()
+                const bucket = this._inicializarBucket(collection)
                 const resultados = await bucket.find({ '_id': _id }).toArray()
                 if (resultados.length > 0) {
                     const metadados = resultados[0]

@@ -7,12 +7,13 @@ export const downloadRouter = Router()
 
 downloadRouter.get('/:id', async (req, res) => {
     const id = req.params.id
+    const {nomeEmpresa} = req.query;   
 
     const bd = req.app.locals.bd
     const arquivoCtrl = new ArquivoController(bd)
 
     try {
-        const caminhoArquivo = await arquivoCtrl.realizarDownload(id)
+        const caminhoArquivo = await arquivoCtrl.realizarDownload(id, String(nomeEmpresa))
         return res.download(caminhoArquivo, () => {
             unlinkSync(caminhoArquivo)
         })

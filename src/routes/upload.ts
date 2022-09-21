@@ -22,11 +22,14 @@ uploadRouter.post('/', async (req, res) => {
     let quantidadeErroGravacao = 0
     let quantidadeErroObjArquivoInvalido = 0
     let quantidadeErroInesperado = 0
+    
 
     const promises = nomesArquivos.map(async (arquivo) => {
         const objArquivo = req.files[arquivo]
+        const {nomeEmpresa} = req.query;
+
         try {
-            const idArquivo = await arquivoCtrl.realizarUpload(objArquivo)
+            const idArquivo = await arquivoCtrl.realizarUpload(objArquivo, String(nomeEmpresa))
             idsArquivosSalvos.push(idArquivo)
         } catch (erro) {
             switch (erro) {
