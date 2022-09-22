@@ -51,7 +51,6 @@ export class ArquivoController {
 
     realizarUpload(objArquivo: any, collection: String): Promise<ObjectId> {
         return new Promise((resolve, reject) => {
-            console.log(collection)
             if(collection === "undefined") {
                 reject(ErroUpload.SEM_EMPRESA)
             } else {
@@ -93,6 +92,8 @@ export class ArquivoController {
         return new Promise(async (resolve, reject) => {
             if (id && id.length == 24) {
                 const _id = new ObjectId(id)
+
+                console.log(collection)
                 const bucket = this._inicializarBucket(collection)
                 const resultados = await bucket.find({ '_id': _id }).toArray()
                 if (resultados.length > 0) {
