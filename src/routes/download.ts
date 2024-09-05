@@ -14,6 +14,7 @@ downloadRouter.get('/:id', async (req, res) => {
 
     try {
         const caminhoArquivo = await arquivoCtrl.realizarDownload(id, String(nomeEmpresa))
+        console.log(caminhoArquivo)
         return res.download(caminhoArquivo, () => {
             unlinkSync(caminhoArquivo)
         })
