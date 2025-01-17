@@ -42,16 +42,17 @@ var path = require("path");
 var fs = require("fs");
 var ArquivoController_1 = require("../controllers/ArquivoController");
 exports.uploadRouter = express_1.Router();
-exports.uploadRouter.post('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+exports.uploadRouter.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var nomesArquivos, diretorio, bd, arquivoCtrl, idsArquivosSalvos, quantidadeErroGravacao, quantidadeErroObjArquivoInvalido, quantidadeErroInesperado, promises;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (!req.files || Object.keys(req.files).length == 0) {
-                    return [2 /*return*/, res.status(400).send('Nenhum arquivo recebido')];
+                    console.log("aaaaa");
+                    return [2 /*return*/, res.status(400).send("Nenhum arquivo recebido")];
                 }
                 nomesArquivos = Object.keys(req.files);
-                diretorio = path.join(__dirname, '..', '..', 'arquivos');
+                diretorio = path.join(__dirname, "..", "..", "arquivos");
                 if (!fs.existsSync(diretorio)) {
                     fs.mkdirSync(diretorio);
                 }
@@ -96,12 +97,7 @@ exports.uploadRouter.post('/', function (req, res) { return __awaiter(void 0, vo
                 return [4 /*yield*/, Promise.all(promises)];
             case 1:
                 _a.sent();
-                res.json({
-                    idsArquivosSalvos: idsArquivosSalvos,
-                    quantidadeErroGravacao: quantidadeErroGravacao,
-                    quantidadeErroInesperado: quantidadeErroInesperado,
-                    quantidadeErroObjArquivoInvalido: quantidadeErroObjArquivoInvalido
-                });
+                res.json(idsArquivosSalvos.length > 0 ? idsArquivosSalvos[0] : "");
                 return [2 /*return*/];
         }
     });

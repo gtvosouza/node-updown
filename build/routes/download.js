@@ -56,6 +56,7 @@ exports.downloadRouter.get('/:id', function (req, res) { return __awaiter(void 0
                 return [4 /*yield*/, arquivoCtrl.realizarDownload(id, String(nomeEmpresa))];
             case 2:
                 caminhoArquivo_1 = _a.sent();
+                console.log(caminhoArquivo_1);
                 return [2 /*return*/, res.download(caminhoArquivo_1, function () {
                         fs_1.unlinkSync(caminhoArquivo_1);
                     })];

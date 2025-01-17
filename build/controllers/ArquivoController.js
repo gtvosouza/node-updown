@@ -69,13 +69,12 @@ var ArquivoController = /** @class */ (function () {
     };
     ArquivoController.prototype._inicializarBucket = function (collection) {
         return new mongodb_1.GridFSBucket(this._bd, {
-            bucketName: 'arquivos' + collection
+            bucketName: 'arquivos_' + collection
         });
     };
     ArquivoController.prototype.realizarUpload = function (objArquivo, collection) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            console.log(collection);
             if (collection === "undefined") {
                 reject(ErroUpload.SEM_EMPRESA);
             }
@@ -119,6 +118,7 @@ var ArquivoController = /** @class */ (function () {
                     case 0:
                         if (!(id && id.length == 24)) return [3 /*break*/, 2];
                         _id = new mongodb_1.ObjectId(id);
+                        console.log(collection);
                         bucket = this._inicializarBucket(collection);
                         return [4 /*yield*/, bucket.find({ '_id': _id }).toArray()];
                     case 1:

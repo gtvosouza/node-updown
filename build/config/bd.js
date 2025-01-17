@@ -36,53 +36,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.conectarNoBD = void 0;
-var mongodb_1 = require("mongodb");
-var app_1 = require("../app");
-var URI_BD = "mongodb://localhost/arquivos";
+var mongoose_1 = require("mongoose");
 var conectarNoBD = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var clienteMongo, conexao_1, erro_1;
+    var prod, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                clienteMongo = new mongodb_1.MongoClient(URI_BD, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true
-                });
-                _a.label = 1;
+                _a.trys.push([0, 2, , 3]);
+                prod = "mongodb+srv://gabrielsouza:8b2oG6suHox7bijM@cluster0.r9ihj.mongodb.net/portalmax";
+                return [4 /*yield*/, mongoose_1.default.connect(prod)];
             case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, clienteMongo.connect()];
+                _a.sent();
+                console.log("MongoDB Connected");
+                return [3 /*break*/, 3];
             case 2:
-                conexao_1 = _a.sent();
-                app_1.app.locals.bd = conexao_1.db();
-                console.log("App conectado ao bd " + conexao_1.db().databaseName);
-                process.on('SIGINT', function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var erro_2;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                _a.trys.push([0, 2, , 3]);
-                                return [4 /*yield*/, conexao_1.close()];
-                            case 1:
-                                _a.sent();
-                                console.log('Conexão com o bd fechada');
-                                return [3 /*break*/, 3];
-                            case 2:
-                                erro_2 = _a.sent();
-                                console.log(erro_2);
-                                return [3 /*break*/, 3];
-                            case 3: return [2 /*return*/];
-                        }
-                    });
-                }); });
-                return [3 /*break*/, 4];
-            case 3:
-                erro_1 = _a.sent();
-                console.log(erro_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                error_1 = _a.sent();
+                console.error("MongoDB error: ", error_1);
+                process.exit(1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.conectarNoBD = conectarNoBD;
+exports.default = conectarNoBD;
