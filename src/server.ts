@@ -10,9 +10,9 @@ const porta = process.env.PORT || 3335;
 https
   .createServer(
     {
-      cert: fs.readFileSync(path.join(__dirname, "SSL/certificate.crt")),
-      key: fs.readFileSync(path.join(__dirname, "SSL/private.key")),
-      ca: fs.readFileSync(path.join(__dirname, "SSL/ca_bundle.crt")),
+      cert: fs.readFileSync("/home/deploy/updown/src/SSL/certificate.crt"),
+      key: fs.readFileSync("/home/deploy/updown/src/SSL/private.key"),
+      ca: fs.readFileSync("/home/deploy/updown/src/SSL/ca_bundle.crt"),
     },
     app
   )
